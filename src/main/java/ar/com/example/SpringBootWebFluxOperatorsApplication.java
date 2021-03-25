@@ -16,7 +16,15 @@ public class SpringBootWebFluxOperatorsApplication implements CommandLineRunner 
 
     @Override
     public void run(String... args) throws Exception {
-        Flux<String> nombres = Flux.just("Maximiliano","Marta","Yesica","Luciana","Karen", "Marcelo");
-        nombres.doOnNext(log::info).subscribe();
+        Flux<String> nombres = Flux.just("Maximiliano","Marta","Yesica","Luciana","Karen", "Marcelo")
+        .doOnNext(e-> {
+            if(e.isEmpty()){
+                throw new RuntimeException("Hay un elemento vacio");
+            }            else{
+                System.out.println("Elemento: " + e);
+            }
+        })        ;
+        nombres.subscribe(e-> log.info("Elemento:" + e),
+                error -> log.error(error.getMessage()));
     }
 }
