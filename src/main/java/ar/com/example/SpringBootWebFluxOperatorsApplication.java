@@ -20,11 +20,21 @@ public class SpringBootWebFluxOperatorsApplication implements CommandLineRunner 
         .doOnNext(e-> {
             if(e.isEmpty()){
                 throw new RuntimeException("Hay un elemento vacio");
-            }            else{
-                System.out.println("Elemento: " + e);
             }
+                System.out.println("Elemento: " + e);
+
         })        ;
-        nombres.subscribe(e-> log.info("Elemento:" + e),
-                error -> log.error(error.getMessage()));
+        nombres.subscribe(e -> log.info("Elemento:" + e),
+                // Equivalente a OnError
+                error -> log.error(error.getMessage()),
+                //Equivalente a OnComplete
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        log.info("\nEl processo finalizo");
+                    }
+                }
+
+        );
     }
 }
